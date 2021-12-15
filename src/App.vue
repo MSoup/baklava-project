@@ -32,9 +32,5 @@ export default {
   components: {
     Editor,
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>

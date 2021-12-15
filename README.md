@@ -1,4 +1,10 @@
-# baklava
+# BaklavaJS fork
+
+## TODO
+[ ] Make regular looking node
+[ ] Make node with corner cut
+[ ] Control node appearance with data
+[ ] Connect a CSV file to construct nodes
 
 ## Project setup
 ```
