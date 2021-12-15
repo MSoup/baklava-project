@@ -9,6 +9,5 @@ export function BlockBuilder({ InputsInfo, OutputsInfo }) {
     OutputsInfo.forEach((output) => {
         Block.addOutputInterface(output.name);
     });
-    console.log("about to return the block")
     return Block.build();
 }

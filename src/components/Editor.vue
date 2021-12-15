@@ -47,18 +47,13 @@ export default {
     },
     created() {
         this.editor.use(this.viewPlugin);
-
+        // Create Nodes
         const testNode = this.createBasicNode("DisplayNode")
-        // Allows me to right click and physically clone node
-        this.editor.registerNodeType("DisplayNode", testNode)
-
         const inputOnlyNode = this.createInputOnlyNode()
+
         console.log("To avoid TS errors for now", inputOnlyNode)
 
-
-
-
-        const testMathNode = new NodeBuilder("Test2")
+        const TestNode2 = new NodeBuilder("Test2")
             .setName("Test Node 2")
             .addInputInterface("Val1", "Connect Me", 10)
             .onCalculate(n => {
@@ -69,11 +64,25 @@ export default {
             })
             .addOutputInterface("Output Interface")
             .build()
+
+
+
+        // Allows me to right click and physically clone node
+        this.editor.registerNodeType("DisplayNode", testNode)
         this.editor.registerNodeType("Testy", MathNode)
         this.editor.registerNodeType("DisplayNode", testNode)
-        this.addNodeWithCoordinates(testNode, 400, 140);
-        this.addNodeWithCoordinates(testMathNode, 600, 340);
+        this.addNodeWithCoordinates(testNode, 100, 50);
+        this.addNodeWithCoordinates(TestNode2, 350, 50);
+        this.addNodeWithCoordinates(inputOnlyNode, 600, 50);
         this.editor.use(new OptionPlugin());
     }
 }
 </script>
+
+<style>
+.inputOnly {
+    min-height: 100px;
+
+}
+
+</style>
