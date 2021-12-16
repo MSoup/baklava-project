@@ -1,5 +1,5 @@
 <template>
-    <baklava-editor :plugin="viewPlugin" :class="editorname"></baklava-editor>
+        <baklava-editor :plugin="viewPlugin" :class="editorname"></baklava-editor>
 </template>
 
 <script>
@@ -74,8 +74,12 @@ export default {
 .node-editor {
     min-height: 300px;
     margin-bottom: 15px;
-    max-height: 400px;
+    max-height: 500px;
     border-radius: 10px;
+}
+
+.node-editor {
+    height: 100%;
 }
 
 .inputOnly {

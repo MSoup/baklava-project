@@ -10,7 +10,7 @@
             :key="item.tab"
             @click="$emit('clickEvent', item.tab)"
         >
-            {{ item.tab }}
+            {{ text[item.tab] }}
         </v-tab>
         <v-spacer></v-spacer>
         <v-btn
@@ -29,7 +29,7 @@
         :key="item.tab"
       >
         <v-container >
-            <p>{{ item.tab }}</p>
+            <h2>{{ item.tab }}</h2>
         </v-container>
       </v-tab-item>
     </v-tabs-items>
@@ -43,16 +43,18 @@
     data () {
       return {
         tab: null,
-        items: [
-          { tab: 'One', content: "Tab 1 Conteeent" },
-          { tab: 'Two', content: 'Tab 2 Content' },
-          { tab: 'Three', content: 'Tab 3 Content' },
-          { tab: 'Four', content: 'Tab 4 Content' },
-          { tab: 'Five', content: 'Tab 5 Content' },
-        ],
+        text: {
+            "1": "One",
+            "2": "Two",
+            "3": "Three",
+            "4": "Four",
+        }
       }
     },
     components: {
+    },
+    props: {
+        items: Array
     }
   }
 </script>

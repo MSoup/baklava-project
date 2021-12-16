@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <Tabs @clickEvent="clickEvent" /> 
+      <Tabs :items=items @clickEvent="clickEvent" /> 
       <v-container fluid>
         <v-row class="sidebar-editor-sidebar-container">
           <v-col>
@@ -16,7 +16,7 @@
             <Editor editorname="editor-1" />
             <Editor editorname="editor-2" />
             <Editor editorname="editor-3" />
-
+            <!-- {{display}} -->
           </v-col>
           <v-col>
             <v-container class="sidebar-container">
@@ -40,14 +40,19 @@ export default {
   name: 'App',
   data() {
     return {
-      tab1: [],
-      tab2: [],
-      tab3: [],
+      items: [
+          { tab: '1', content: Editor },
+          { tab: '2', content: 'Tab 2 Content' },
+          { tab: '3', content: 'Tab 3 Content' },
+          { tab: '4', content: 'Tab 4 Content' },
+      ],
+      display: ""
+
     }
   },
   methods: {
     clickEvent(val) {
-      console.log(val)
+      this.display = this.items[val-1].content
     },
   },
   components: {
@@ -55,7 +60,6 @@ export default {
     Editor
   },
   created() {
-    this.tab1.push()
   },
 
 };
@@ -64,16 +68,11 @@ export default {
 <style scoped>
 .sidebar-container {
   border: solid pink;
-  min-height: 90vh;
+  min-height: 180vh;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
 }
-
-/* .sidebar-container {
-
-
-} */
 
 .sidebar-editor-sidebar-container {
   flex-wrap: nowrap;
@@ -83,6 +82,7 @@ export default {
 
 .sidebar-container > button {
   margin: 5px;
+  margin-bottom: 15px;
 }
 
 </style>
