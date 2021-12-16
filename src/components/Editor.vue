@@ -1,14 +1,14 @@
 <template>
-    <baklava-editor :plugin="viewPlugin"></baklava-editor>
+    <baklava-editor :plugin="viewPlugin" :class="editorname"></baklava-editor>
 </template>
 
 <script>
 import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
-// import { BlockBuilder } from "../helpers/BlockBuilder";
-import { NodeBuilder } from "@baklavajs/core";
-import {MathNode} from "../nodes/MathNode"
+// import { NodeBuilder } from "@baklavajs/core";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
+import ExampleNode from "../nodes/ExampleNode";
+import BasicNode from "../nodes/BasicNode";
 
 export default {
     data() {
@@ -27,62 +27,58 @@ export default {
             n.position.y = y;
             return n;
         },
-        createBasicNode(nodeName) {
-            return new NodeBuilder(nodeName)
-                .setName("Display")
-                .addInputInterface("Input: String")
-                .addOption("ValueText", "TextOption")
-                .addOption("What's your name?", "InputOption")
-                .onCalculate(n => {
-                    let value = n.getInterface("Value").value;
-                    if (typeof value === "number") {
-                        value = value.toFixed(3);
-                    }
-                    n.setOptionValue("ValueText", value);
-                }).build()
-        },
-        createInputOnlyNode() {
-            return new NodeBuilder("InputOnlyNode",{ customClasses: "inputOnly" }).build()
-        }
+    },
+    props: {
+        editorname: String
     },
     created() {
         this.editor.use(this.viewPlugin);
-        // Create Nodes
-        const testNode = this.createBasicNode("DisplayNode")
-        const inputOnlyNode = this.createInputOnlyNode()
-
-        console.log("To avoid TS errors for now", inputOnlyNode)
-
-        const TestNode2 = new NodeBuilder("Test2")
-            .setName("Test Node 2")
-            .addInputInterface("Val1", "Connect Me", 10)
-            .onCalculate(n => {
-                let value = n.getInterface("Val1").value;
-                if (value > 10) {
-                    console.log("val > 10");
-                }
-            })
-            .addOutputInterface("Output Interface")
-            .build()
-
-
-
-        // Allows me to right click and physically clone node
-        this.editor.registerNodeType("DisplayNode", testNode)
-        this.editor.registerNodeType("Testy", MathNode)
-        this.editor.registerNodeType("DisplayNode", testNode)
-        this.addNodeWithCoordinates(testNode, 100, 50);
-        this.addNodeWithCoordinates(TestNode2, 350, 50);
-        this.addNodeWithCoordinates(inputOnlyNode, 600, 50);
         this.editor.use(new OptionPlugin());
+        this.editor.registerNodeType("ExampleNode", ExampleNode)
+        this.editor.registerNodeType("BasicNode", BasicNode)
+        const node1 = this.addNodeWithCoordinates(ExampleNode, 100, 50);
+        const node2 = this.addNodeWithCoordinates(BasicNode, 350, 50);
+        const node3 = this.addNodeWithCoordinates(BasicNode, 650, 50);
+        const node4 = this.addNodeWithCoordinates(BasicNode, 950, 50);
+        const node5 = this.addNodeWithCoordinates(BasicNode, 1350, 50);
+
+        this.editor.addConnection(
+            node1.getInterface("Output"),
+            node2.getInterface("Input")
+        );
+
+        this.editor.addConnection(
+            node2.getInterface("Output"),
+            node3.getInterface("Input")
+        );
+
+        this.editor.addConnection(
+            node3.getInterface("Output"),
+            node4.getInterface("Input")
+        );
+
+        this.editor.addConnection(
+            node4.getInterface("Output"),
+            node5.getInterface("Input")
+        );
+
+
+
+
     }
 }
 </script>
 
 <style>
-.inputOnly {
-    min-height: 100px;
 
+.node-editor {
+    min-height: 300px;
+    margin-bottom: 15px;
+    max-height: 400px;
+    border-radius: 10px;
 }
 
+.inputOnly {
+    min-height: 100px;
+}
 </style>

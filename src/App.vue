@@ -1,36 +1,88 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-    <v-spacer></v-spacer>
-
-    <v-btn
-        href="https://newcat.github.io/baklavajs/#/"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">BaklavaJS Documentation</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
     <v-main>
-      <Editor />
+      <Tabs @clickEvent="clickEvent" /> 
+      <v-container fluid>
+        <v-row class="sidebar-editor-sidebar-container">
+          <v-col>
+            <v-container class="sidebar-container">
+                <v-btn>Button</v-btn>
+                <v-btn>Button</v-btn>
+                <v-btn>Button</v-btn>
+                <v-btn>Button</v-btn>
+            </v-container>
+          </v-col>
+          <v-col cols="8" >
+            <Editor editorname="editor-1" />
+            <Editor editorname="editor-2" />
+            <Editor editorname="editor-3" />
+
+          </v-col>
+          <v-col>
+            <v-container class="sidebar-container">
+                <v-btn>Button</v-btn>
+                <v-btn>Button</v-btn>
+                <v-btn>Button</v-btn>
+                <v-btn>Button</v-btn>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import Editor from './components/Editor';
+import Tabs from "./components/Tab";
 
 export default {
   name: 'App',
-
-  components: {
-    Editor,
+  data() {
+    return {
+      tab1: [],
+      tab2: [],
+      tab3: [],
+    }
   },
+  methods: {
+    clickEvent(val) {
+      console.log(val)
+    },
+  },
+  components: {
+    Tabs, 
+    Editor
+  },
+  created() {
+    this.tab1.push()
+  },
+
 };
 </script>
+
+<style scoped>
+.sidebar-container {
+  border: solid pink;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* .sidebar-container {
+
+
+} */
+
+.sidebar-editor-sidebar-container {
+  flex-wrap: nowrap;
+  border: solid;
+}
+
+
+.sidebar-container > button {
+  margin: 5px;
+}
+
+</style>
