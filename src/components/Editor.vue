@@ -1,5 +1,11 @@
 <template>
-        <baklava-editor :plugin="viewPlugin" :class="editorname"></baklava-editor>
+<v-expand-x-transition>
+    <v-container class="editor-container">
+        <h2>{{EditorName}}</h2>
+        <baklava-editor :plugin="viewPlugin" :class="EditorName"></baklava-editor>
+    </v-container>
+</v-expand-x-transition>
+
 </template>
 
 <script>
@@ -15,6 +21,7 @@ export default {
         return {
             editor: new Editor(),
             viewPlugin: new ViewPlugin(),
+            expand2: false,
         }
     },
     methods: {
@@ -27,7 +34,8 @@ export default {
         },
     },
     props: {
-        editorname: String
+        EditorName: String,
+
     },
     created() {
         this.editor.use(this.viewPlugin);
@@ -59,15 +67,15 @@ export default {
             node4.getInterface("Output"),
             node5.getInterface("Input")
         );
-
-
-
-
     }
 }
 </script>
 
 <style>
+.background {
+    min-height: 300px;
+    max-height: 400px;
+}
 
 .node-editor {
     min-height: 300px;
@@ -76,11 +84,11 @@ export default {
     border-radius: 10px;
 }
 
-.node-editor {
-    height: 100%;
-}
-
 .inputOnly {
     min-height: 100px;
+}
+
+.node > .__title > span  {
+  font-size: 16px;
 }
 </style>
