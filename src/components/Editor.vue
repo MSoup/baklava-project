@@ -15,8 +15,6 @@ export default {
         return {
             editor: new Editor(),
             viewPlugin: new ViewPlugin(),
-            InputsInfo: [{name: "Block in 1"}, {name: "Block in 2"}],
-            OutputsInfo: [{name: "Block out 1"}, {name: "Block out 2"}]
         }
     },
     methods: {
@@ -74,7 +72,7 @@ export default {
 .node-editor {
     min-height: 300px;
     margin-bottom: 15px;
-    max-height: 500px;
+    max-height: 400px;
     border-radius: 10px;
 }
 

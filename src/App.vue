@@ -6,16 +6,20 @@
         <v-row class="sidebar-editor-sidebar-container">
           <v-col>
             <v-container class="sidebar-container">
-                <v-btn>Button</v-btn>
-                <v-btn>Button</v-btn>
-                <v-btn>Button</v-btn>
-                <v-btn>Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+                <v-btn>Dummy Button</v-btn>
+
             </v-container>
           </v-col>
           <v-col cols="8" >
+            <h2>{{display}}</h2>
             <Editor editorname="editor-1" />
-            <Editor editorname="editor-2" />
-            <Editor editorname="editor-3" />
             <!-- {{display}} -->
           </v-col>
           <v-col>
@@ -41,13 +45,12 @@ export default {
   data() {
     return {
       items: [
-          { tab: '1', content: Editor },
-          { tab: '2', content: 'Tab 2 Content' },
-          { tab: '3', content: 'Tab 3 Content' },
-          { tab: '4', content: 'Tab 4 Content' },
+          { tab: '1', content: 'Title for Tab 1 Contents' },
+          { tab: '2', content: 'Title for Tab 2 Contents' },
+          { tab: '3', content: 'Title for Tab 3 Contents' },
+          { tab: '4', content: 'Title for Tab 4 Contents' },
       ],
       display: ""
-
     }
   },
   methods: {
@@ -60,6 +63,7 @@ export default {
     Editor
   },
   created() {
+    this.clickEvent("1");
   },
 
 };
