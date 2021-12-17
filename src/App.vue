@@ -6,28 +6,17 @@
         <v-row class="sidebar-editor-sidebar-container">
           <v-col>
             <v-container class="sidebar-container">
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-                <v-btn>Dummy Button</v-btn>
-
+ 
             </v-container>
           </v-col>
           <v-col cols="8" >
             <h2>{{display}}</h2>
             <Editor editorname="editor-1" />
-            <!-- {{display}} -->
+
           </v-col>
           <v-col>
             <v-container class="sidebar-container">
-                <v-btn>Button</v-btn>
-                <v-btn>Button</v-btn>
-                <v-btn>Button</v-btn>
-                <v-btn>Button</v-btn>
+
             </v-container>
           </v-col>
         </v-row>
