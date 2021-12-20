@@ -35,10 +35,10 @@
     </v-tabs-items>
     <v-container fluid>
       <v-row class="graph-container">
-        <v-col>
+        <!-- <v-col>
           <v-container class="sidebar-container">
           </v-container>
-        </v-col>
+        </v-col> -->
 
         <v-col cols="8" >
           <h2>Demo Graph: {{focused.content}}</h2>
@@ -49,7 +49,7 @@
         </v-col>
         <v-col>
           <v-container class="sidebar-container">
-
+            <Editor EditorName="resultGraph"/>
           </v-container>
         </v-col>
       </v-row>
@@ -106,5 +106,6 @@ import Editor from "./Editor"
   margin: 5px;
   margin-bottom: 15px;
 }
+
 
 </style>

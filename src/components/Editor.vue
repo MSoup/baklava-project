@@ -3,7 +3,6 @@
         <h2>{{EditorName}}</h2>
         <baklava-editor :plugin="viewPlugin" :class="EditorName"></baklava-editor>
     </v-container>
-
 </template>
 
 <script lang="ts">
@@ -203,6 +202,7 @@ export default {
     margin-bottom: 15px;
     max-height: 400px;
     border-radius: 10px;
+    border: solid red;
 }
 
 .inputOnly {
@@ -212,4 +212,6 @@ export default {
 .node > .__title > span  {
   font-size: 16px;
 }
+
+
 </style>
