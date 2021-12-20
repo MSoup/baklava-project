@@ -1,10 +1,8 @@
 <template>
-<v-expand-x-transition>
     <v-container class="editor-container">
         <h2>{{EditorName}}</h2>
         <baklava-editor :plugin="viewPlugin" :class="EditorName"></baklava-editor>
     </v-container>
-</v-expand-x-transition>
 
 </template>
 
@@ -13,7 +11,6 @@ import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 // import { NodeBuilder } from "@baklavajs/core";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
-import ExampleNode from "../nodes/ExampleNode";
 import BasicNode from "../nodes/BasicNode";
 
 export default {
@@ -21,17 +18,66 @@ export default {
         return {
             editor: new Editor(),
             viewPlugin: new ViewPlugin(),
-            expand2: false,
         }
     },
     methods: {
-        addNodeWithCoordinates(nodeType, x, y) {
-            const n = new nodeType();
-            this.editor.addNode(n);
-            n.position.x = x;
-            n.position.y = y;
-            return n;
+        // GET information
+
+        // get list of nodes
+        getNodes() {
+            return this.editor.nodes
         },
+        // get position of a node
+        // node: BasicNode Object
+        // returns [x,y]: Array<String>
+        getPosition(node) {
+            return [node.position.x, node.position.y]
+        },
+        // ADD information
+        makeSimpleConnection(node1,node2, interface1name="Output", interface2name="Input") {
+            this.editor.addConnection(
+                node1.getInterface(interface1name),
+                node2.getInterface(interface2name))
+        },
+
+        // Adds nodeType object to list of nodes
+        // nodeName: String, 
+        // nodeType: Node Object
+        // returns node instance
+
+        makeNode(nodeName, nodeType) {
+            const n = new nodeType()
+            n.name = nodeName
+            this.editor.addNode(n)
+            return n
+        },
+
+        // Inserts node below referenced node
+        // node: BasicNode
+        insertNodeBelow(name, node) {
+            const referencedPosition = this.getPosition(node)
+            const newPosition = [referencedPosition[0], referencedPosition[1] + 150]
+            const newNode = this.makeNode(name, BasicNode)
+            newNode.position.x = newPosition[0]
+            newNode.position.y = newPosition[1]
+            },
+        // Inserts node above referenced node
+        // node: BasicNode
+        insertNodeAbove(name, node) {
+            const referencedPosition = this.getPosition(node)
+            const newPosition = [referencedPosition[0], referencedPosition[1] - 150]
+            const newNode = this.makeNode(name, BasicNode)
+            newNode.position.x = newPosition[0]
+            newNode.position.y = newPosition[1]
+            },
+
+        // insertBelow(node) {
+        //     this.nodeList.push
+        // },
+        // insertRight(node) {
+        //     this.nodeList.push
+        // }
+
     },
     props: {
         EditorName: String,
@@ -40,33 +86,18 @@ export default {
     created() {
         this.editor.use(this.viewPlugin);
         this.editor.use(new OptionPlugin());
-        this.editor.registerNodeType("ExampleNode", ExampleNode)
         this.editor.registerNodeType("BasicNode", BasicNode)
-        const node1 = this.addNodeWithCoordinates(ExampleNode, 100, 50);
-        const node2 = this.addNodeWithCoordinates(BasicNode, 350, 50);
-        const node3 = this.addNodeWithCoordinates(BasicNode, 650, 50);
-        const node4 = this.addNodeWithCoordinates(BasicNode, 950, 50);
-        const node5 = this.addNodeWithCoordinates(BasicNode, 1350, 50);
+        for (let n = 0; n < 5; n++) {
+            this.makeNode("node-"+n,BasicNode)
+        }
 
-        this.editor.addConnection(
-            node1.getInterface("Output"),
-            node2.getInterface("Input")
-        );
+        let targetNode = this.getNodes().filter(node=>node.name=="node-0")[0]
+        this.insertNodeBelow("node-below", targetNode)
+        let targetNode2 = this.getNodes().filter(node=>node.name=="node-below")[0]
 
-        this.editor.addConnection(
-            node2.getInterface("Output"),
-            node3.getInterface("Input")
-        );
+        this.makeSimpleConnection(targetNode, targetNode2)
+        this.insertNodeAbove("node-above", targetNode)
 
-        this.editor.addConnection(
-            node3.getInterface("Output"),
-            node4.getInterface("Input")
-        );
-
-        this.editor.addConnection(
-            node4.getInterface("Output"),
-            node5.getInterface("Input")
-        );
     }
 }
 </script>
