@@ -5,14 +5,12 @@
     </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import { Editor } from "@baklavajs/core";
 import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 // import { NodeBuilder } from "@baklavajs/core";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import BasicNode from "../nodes/BasicNode";
-// import makeGraph1 from "../helpers/makeGraph1";
-
 
 export default {
     data() {
@@ -77,7 +75,10 @@ export default {
             newNode.position.x = newPosition[0]
             newNode.position.y = newPosition[1]
             },
-
+        // n1, n2: numbers
+        bindNodes(n1, n2) {
+            this.makeSimpleConnection(this.findNode("node-" + n1),this.findNode("node-" + n2))
+        },
         // insertNodeRight(node) {
         insertNodeRight(name, node) {
             const referencedPosition = this.getPosition(node)
@@ -114,24 +115,45 @@ export default {
                     break
             }
         },
+        colorNode(name, color) {
+            const node = this.findNode(name)
+            node.customClasses += color
+        }
     },
     props: {
         EditorName: String,
-
+        contents: undefined || Array,
     },
     created() {
+        // const contents = this.contents? this.contents: {"id":1,"connects_to":"","file_name":"","file_number":0,"file_description":"no info provided"}
+        // console.log(contents)
         this.editor.use(this.viewPlugin);
         this.viewPlugin.scaling = 0.39
         this.viewPlugin.panning = {x: 10, y: 400}
+        this.viewPlugin.useStraightConnections = true
+        this.viewPlugin.backgroundGrid.gridSize = 200
+        this.viewPlugin.hooks.renderNode.tap(this, (node) => {
+            if (node.data.type === "BasicNode") {
+                node.$el.style.backgroundColor = "#647687";
+            }
+            return node;
+        });
 
         this.editor.use(new OptionPlugin());
         this.editor.registerNodeType("BasicNode", BasicNode)
 
         // MAKING NODES FOR DEMO
         // adding 12 nodes to nodelist
+        // TODO: Make this function real (pull from data points)
+        // Currently, the below code errors (reading position doesnt work)
+        // for (let i = 0; i < this.contents.length; i++) {
+        //     this.makeNode("node-"+i,BasicNode)
+        // }
+
         for (let n = 0; n < 12; n++) {
             this.makeNode("node-"+n,BasicNode)
         }
+        console.log(this.getNodes())
 
         // drawing first 3 nodes
         for (var n = 1; n < 4; n++) {
@@ -165,36 +187,61 @@ export default {
         // 11
         this.moveNode("node-" + n, "node-3", "right")
 
-        // How do I bind "this" to the function????
-        // function bindNodes(n1,n2) {
-        //     this.makeSimpleConnection.bind(this)
-        //     this.makeSimpleConnection(this.findNode("node-" + n1),this.findNode("node-" + n2))
-        // }
-        // bindNodes(0,1)
+        this.bindNodes(0,1)
+        this.bindNodes(1,2)
+        this.bindNodes(4,2)
+        this.bindNodes(2,5)
+        this.bindNodes(6,7)
+        this.bindNodes(6,8)
+        this.bindNodes(5,7)
+        this.bindNodes(5,8)
+        this.bindNodes(3,7)
+        this.bindNodes(3,8)
+        this.bindNodes(11,9)
+        this.bindNodes(8,9)
+        this.bindNodes(9,10)
 
+        // coloring
+        this.colorNode("node-1", "blue")
+        this.colorNode("node-4", "blue cut")
+        this.colorNode("node-2", "red")
+        this.colorNode("node-3", "green")
+        this.colorNode("node-11", "cut")
+    },
 
-        // Bind all the nodes appropriately
-        this.makeSimpleConnection(this.findNode("node-0"),this.findNode("node-1"))
-        this.makeSimpleConnection(this.findNode("node-1"),this.findNode("node-2"))
-        this.makeSimpleConnection(this.findNode("node-4"),this.findNode("node-2"))
-        this.makeSimpleConnection(this.findNode("node-2"),this.findNode("node-5"))
-        this.makeSimpleConnection(this.findNode("node-6"),this.findNode("node-7"))
-        this.makeSimpleConnection(this.findNode("node-6"),this.findNode("node-8"))
-        this.makeSimpleConnection(this.findNode("node-5"),this.findNode("node-7"))
-        this.makeSimpleConnection(this.findNode("node-5"),this.findNode("node-8"))
-        this.makeSimpleConnection(this.findNode("node-3"),this.findNode("node-7"))
-        this.makeSimpleConnection(this.findNode("node-3"),this.findNode("node-8"))
-        this.makeSimpleConnection(this.findNode("node-11"),this.findNode("node-9"))
-        this.makeSimpleConnection(this.findNode("node-8"),this.findNode("node-9"))
-        this.makeSimpleConnection(this.findNode("node-9"),this.findNode("node-10"))
-    }
 }
 </script>
 
 <style>
+.__port {
+  opacity: 0.0;
+}
+.blue {
+    background-color: #4682B4;
+}
+.red {
+    background-color: #CD5C5C;
+}
+.green {
+    background-color: #6B8E23;
+}
+
+.cut {
+    clip-path: polygon(75% 0, 100% 40%, 100% 100%, 0 100%, 0 0);
+}
+
+.node > .__title {
+    background-color: #647687;
+}
+
+.node:hover {
+  opacity: 0.95;
+}
+
 .background {
     min-height: 300px;
     max-height: 400px;
+    background-color: #E0E4E7 !important;
 }
 
 .node-editor {
@@ -202,8 +249,17 @@ export default {
     margin-bottom: 15px;
     max-height: 400px;
     border-radius: 10px;
-    border: solid red;
+    filter: drop-shadow(0 0 0.75rem #E0E4E7);
 }
+
+.--selected {
+    border: solid rgb(255, 77, 77);
+}
+
+g .connection {
+    stroke: red;
+}
+
 
 .inputOnly {
     min-height: 100px;
@@ -213,5 +269,15 @@ export default {
   font-size: 16px;
 }
 
+.--output {
+  opacity: 0;   
+}
+.--input {
+  opacity: 0;   
+}
+
+.__options {
+    color: white;
+}
 
 </style>

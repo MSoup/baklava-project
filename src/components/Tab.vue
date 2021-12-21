@@ -29,7 +29,7 @@
         :key="item.tab"
       >
       <v-container>
-      <h2>Graphs for {{ item.tab }}</h2>
+      <h2>{{ item.tab }}</h2>
       </v-container>
       </v-tab-item>
     </v-tabs-items>
@@ -41,10 +41,8 @@
         </v-col> -->
 
         <v-col cols="8" >
-          <h2>Demo Graph: {{focused.content}}</h2>
-          <div v-for="(editor, n) in focused.editors" :key="n">
-            <Editor :EditorName="focused.content"/>
-
+          <div v-for="(editor, n) in 1" :key="n">
+            <Editor EditorName="エンジンマウント入力" :contents="graph_1_data"/>
           </div>
         </v-col>
         <v-col>
@@ -59,29 +57,33 @@
 
 <script>
 import Editor from "./Editor"
+import graph_1_data from "../MOCK_DATA.json";
 
   export default {
     data () {
       return {
         // Default values
         tab: 0,
-        focused: this.components_data[0],
+        focused: 0,
+        graph_1_data: graph_1_data,
       }
     },
     methods: {
       handleClick(index) {
         // Clicking tabs will change what data should be displayed
-        this.focused = this.components_data[index]
-        console.log(this.focused)
-        console.log(this.tab)
+        // this.focused = this.components_data[index]
+        // console.log(this.focused)
+        // console.log(this.tab)
+        console.log(index)
       }
+    },
+    created() {
     },
     components: {
       Editor
     },
     props: {
         items: Array,
-        components_data: Array
     },
   }
 </script>

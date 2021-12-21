@@ -1,0 +1,13 @@
+[
+{"id":1,"connects_to":[2050],"file_name":"","file_number":10012,"file_description":"EGマウント特性（パラメーター）"},
+{"id":2,"connects_to":[2040],"file_name":"2050_MA_10Nm_2nd_11111341.csv","file_number":2050,"file_description":"EGマウント特性（諸元）"},
+{"id":3,"connects_to":[2040],"file_name":"10011_Sample_2.CSV","file_number":10011,"file_description":"EGマウント座票"},
+{"id":4,"connects_to":[2031],"file_name":"","file_number":2040,"file_description":"Pixope"},
+{"id":5,"connects_to":[2000,2001],"file_name":"","file_number":2031,"file_description":"Edgeify"},
+{"id":6,"connects_to":[2000,2001],"file_name":"","file_number":2020,"file_description":"Shuffledrive"},
+{"id":7,"connects_to":[2000,2021],"file_name":"","file_number":2022,"file_description":"Oyondu"},
+{"id":8,"connects_to":[],"file_name":"","file_number":2001,"file_description":"Realbuzz"},
+{"id":9,"connects_to":[201],"file_name":"","file_number":2000,"file_description":"Mymm"},
+{"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"Mymm"},
+{"id":11,"connects_to":[200],"file_name":"","file_number":201,"file_description":"Youspan"}
+]

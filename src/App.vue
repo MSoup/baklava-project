@@ -1,33 +1,12 @@
 <template>
   <v-app>
     <v-main>
-      <Tabs :components_data=components_data :items=items /> 
-      <!-- <v-container fluid>
-        <v-row class="sidebar-editor-sidebar-container">
-          <v-col>
-            <v-container class="sidebar-container">
-            </v-container>
-          </v-col>
-
-          <v-col cols="8" >
-            <h2>Demo Graph: {{curTab.tab}}</h2>
-            <div v-for="(component, index) in display.editors" :key="index">
-              <Editor :EditorName="curTab.content" />
-            </div>
-          </v-col>
-          <v-col>
-            <v-container class="sidebar-container">
-
-            </v-container>
-          </v-col>
-        </v-row>
-      </v-container> -->
+      <Tabs :components_data="components_data" :items=items /> 
     </v-main>
   </v-app>
 </template>
 
 <script>
-// import Editor from './components/Editor';
 import Tabs from "./components/Tab";
 
 export default {
@@ -35,11 +14,9 @@ export default {
   data() {
     return {
       items: [
-          { tab: 'TRD', content: 'Graph Title' },
-          { tab: 'MPTool', content: 'Graph Title' },
-          { tab: 'Editor Name', content: 'Graph Title' },
-          { tab: 'Random Long Title', content: 'Graph Title' },
-          { tab: 'Dave', content: 'Graph Title' },
+          { tab: 'こもり音' },
+          { tab: 'エンジンノイズ'},
+          { tab: 'アイドル試験' },
       ],
       // display represents the source of truth for what should be displayed on the main page where the tab is
 
@@ -79,13 +56,10 @@ export default {
 
 <style scoped>
 .sidebar-container {
-  border: solid pink 2px;
   min-height: 180vh;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  background-color: lightgrey;
-
 }
 
 .sidebar-editor-sidebar-container {
