@@ -30,7 +30,7 @@ export default {
                 {"id":9,"connects_to":[201],"file_name":"","file_number":2000,"file_description":"EGマウント伝達力"},
                 {"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"EGマウントボデーOO度"},
                 {"id":11,"connects_to":[200],"file_name":"","file_number":201,"file_description":"EGマウント寄与"},
-                {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント寄与"},
+                {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント合計寄与"},
             ],
         }
     },
@@ -123,11 +123,11 @@ export default {
                     break
                 case "above":
                     curNode.position.x = referencedPosition[0]
-                    curNode.position.y = referencedPosition[1] - 150
+                    curNode.position.y = referencedPosition[1] - 220
                     break
                 case "below":
                     curNode.position.x = referencedPosition[0]
-                    curNode.position.y = referencedPosition[1] + 150
+                    curNode.position.y = referencedPosition[1] + 220
                     break
             }
         },
@@ -144,8 +144,8 @@ export default {
         // const contents = this.contents? this.contents: {"id":1,"connects_to":"","file_name":"","file_number":0,"file_description":"no info provided"}
         // console.log(contents)
         this.editor.use(this.viewPlugin);
-        this.viewPlugin.scaling = 0.39
-        this.viewPlugin.panning = {x: 10, y: 400}
+        this.viewPlugin.scaling = 0.31
+        this.viewPlugin.panning = {x: 10, y: 500}
         this.viewPlugin.useStraightConnections = true
         this.viewPlugin.backgroundGrid.gridSize = 200
         this.viewPlugin.hooks.renderNode.tap(this, (node) => {
@@ -225,6 +225,10 @@ export default {
         this.colorNode("node-2", "red")
         this.colorNode("node-3", "green")
         this.colorNode("node-11", "cut")
+
+        for (let i = 0; i < 12; i++) {
+            this.findNode("node-" + i).name = this.data[i].file_description
+        }
     },
 
 }
@@ -245,7 +249,7 @@ export default {
 }
 
 .cut {
-    clip-path: polygon(75% 0, 100% 40%, 100% 100%, 0 100%, 0 0);
+    clip-path: polygon(70% 0, 100% 30%, 100% 100%, 0 100%, 0 0);
 }
 
 .node > .__title {
@@ -297,5 +301,9 @@ g .connection {
     color: white;
 }
 
+.node {
+    min-height: 200px;
+    min-width: 250px;
+}
 
 </style>
