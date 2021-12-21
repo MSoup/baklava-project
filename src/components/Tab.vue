@@ -47,7 +47,7 @@
         </v-col>
         <v-col>
           <v-container class="sidebar-container">
-            <Editor EditorName="resultGraph"/>
+            <Editor2 EditorName="評価"/>
           </v-container>
         </v-col>
       </v-row>
@@ -57,6 +57,7 @@
 
 <script>
 import Editor from "./Editor"
+import Editor2 from "./EditorResults"
 import graph_1_data from "../MOCK_DATA.json";
 
   export default {
@@ -71,7 +72,6 @@ import graph_1_data from "../MOCK_DATA.json";
     methods: {
       handleClick(index) {
         // Clicking tabs will change what data should be displayed
-        // this.focused = this.components_data[index]
         // console.log(this.focused)
         // console.log(this.tab)
         console.log(index)
@@ -80,7 +80,7 @@ import graph_1_data from "../MOCK_DATA.json";
     created() {
     },
     components: {
-      Editor
+      Editor, Editor2
     },
     props: {
         items: Array,
@@ -90,12 +90,10 @@ import graph_1_data from "../MOCK_DATA.json";
 
 <style scoped>
 .sidebar-container {
-  border: solid pink 2px;
   min-height: 180vh;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  background-color: lightgrey;
 
 }
 

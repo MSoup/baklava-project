@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <Tabs :components_data="components_data" :items=items /> 
+      <Tabs  :items=items /> 
     </v-main>
   </v-app>
 </template>
@@ -20,28 +20,6 @@ export default {
       ],
       // display represents the source of truth for what should be displayed on the main page where the tab is
 
-      components_data: [
-        {
-          editors: 1,
-          data: {nodes: 5}
-        },
-        {
-          editors: 2,
-          data: {nodes: 2}
-        },
-        {
-          editors: 3,
-          data: {nodes: 2}
-        },
-        {
-          data: {nodes: 2},
-          editors: 4,
-        },
-        {
-          data: {nodes: 2},
-          editors: 5,
-        },
-      ]
     }
   },
   components: {

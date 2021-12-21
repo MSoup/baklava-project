@@ -17,21 +17,6 @@ export default {
         return {
             editor: new Editor(),
             viewPlugin: new ViewPlugin(),
-            // hard coding names of data for now
-            data: [
-                {"id":1,"connects_to":[2050],"file_name":"","file_number":10012,"file_description":"EGマウント特性（パラメーター）"},
-                {"id":2,"connects_to":[2040],"file_name":"2050_MA_10Nm_2nd_11111341.csv","file_number":2050,"file_description":"EGマウント特性（諸元）"},
-                {"id":3,"connects_to":[2040],"file_name":"10011_Sample_2.CSV","file_number":10011,"file_description":"EGマウント座票"},
-                {"id":4,"connects_to":[2031],"file_name":"","file_number":2040,"file_description":"EGマウント静特性"},
-                {"id":5,"connects_to":[2000,2001],"file_name":"","file_number":2031,"file_description":"EGマウント動特性"},
-                {"id":6,"connects_to":[2000,2001],"file_name":"","file_number":2020,"file_description":"EG脈動"},
-                {"id":7,"connects_to":[2000,2021],"file_name":"","file_number":2022,"file_description":"EG脈動（ボデー側）"},
-                {"id":8,"connects_to":[],"file_name":"","file_number":2001,"file_description":"EG変位"},
-                {"id":9,"connects_to":[201],"file_name":"","file_number":2000,"file_description":"EGマウント伝達力"},
-                {"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"EGマウントボデーOO度"},
-                {"id":11,"connects_to":[200],"file_name":"","file_number":201,"file_description":"EGマウント寄与"},
-                {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント寄与"},
-            ],
         }
     },
     methods: {
@@ -64,10 +49,9 @@ export default {
         // nodeType: Node Object
         // returns node instance
 
-        makeNode(nodeName, nodeType, options={}) {
+        makeNode(nodeName, nodeType) {
             const n = new nodeType()
             n.name = nodeName
-            n.options = options
             this.editor.addNode(n)
             return n
         },
@@ -144,8 +128,8 @@ export default {
         // const contents = this.contents? this.contents: {"id":1,"connects_to":"","file_name":"","file_number":0,"file_description":"no info provided"}
         // console.log(contents)
         this.editor.use(this.viewPlugin);
-        this.viewPlugin.scaling = 0.39
-        this.viewPlugin.panning = {x: 10, y: 400}
+        this.viewPlugin.scaling = 0.5
+        this.viewPlugin.panning = {x: 10, y: 100}
         this.viewPlugin.useStraightConnections = true
         this.viewPlugin.backgroundGrid.gridSize = 200
         this.viewPlugin.hooks.renderNode.tap(this, (node) => {
@@ -164,17 +148,12 @@ export default {
         //     this.makeNode("node-"+i,BasicNode)
         // }
 
-        for (let n = 0; n < 12; n++) {
+        for (let n = 0; n < 4; n++) {
             this.makeNode("node-"+n,BasicNode)
-            // let node = this.makeNode("node-"+n, BasicNode)
-            // node.options = this.data[n]
         }
 
-        // trying to make a node from the object passed in
-
-
         // drawing first 3 nodes
-        for (var n = 1; n < 4; n++) {
+        for (var n = 1; n < 3; n++) {
             let lastNode = this.findNode("node-"+(n-1))
             let curNode = this.findNode("node-"+n)
             // make connections
@@ -182,49 +161,12 @@ export default {
         }
         // bottom node
         // 4
-        this.moveNode("node-" + n, "node-1", "below")
-        n++
-        // 5
-        this.moveNode("node-" + n, "node-3", "above")
-        n++
-        // 6
-        this.moveNode("node-" + n, "node-5", "above")
-        n++
-        // 7
-        this.moveNode("node-" + n, "node-6", "right")
-        n++
-        // 8
-        this.moveNode("node-" + n, "node-5", "right")
-        n++
-        // 9
-        this.moveNode("node-" + n, "node-8", "right")
-        n++
-        // 10
-        this.moveNode("node-" + n, "node-9", "right")
-        n++
-        // 11
-        this.moveNode("node-" + n, "node-3", "right")
-
+        this.moveNode("node-" + n, "node-2", "below")
+       
         this.bindNodes(0,1)
         this.bindNodes(1,2)
-        this.bindNodes(4,2)
-        this.bindNodes(2,5)
-        this.bindNodes(6,7)
-        this.bindNodes(6,8)
-        this.bindNodes(5,7)
-        this.bindNodes(5,8)
-        this.bindNodes(3,7)
-        this.bindNodes(3,8)
-        this.bindNodes(11,9)
-        this.bindNodes(8,9)
-        this.bindNodes(9,10)
+        this.bindNodes(1,3)
 
-        // coloring
-        this.colorNode("node-1", "blue")
-        this.colorNode("node-4", "blue cut")
-        this.colorNode("node-2", "red")
-        this.colorNode("node-3", "green")
-        this.colorNode("node-11", "cut")
     },
 
 }
@@ -250,9 +192,6 @@ export default {
 
 .node > .__title {
     background-color: #647687;
-}
-.node > .__title > span {
-    font-size: 26px;
 }
 
 .node:hover {
@@ -284,6 +223,10 @@ g .connection {
 
 .inputOnly {
     min-height: 100px;
+}
+
+.node > .__title > span  {
+  font-size: 26px;
 }
 
 .--output {
