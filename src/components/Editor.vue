@@ -11,6 +11,7 @@ import { ViewPlugin } from "@baklavajs/plugin-renderer-vue";
 // import { NodeBuilder } from "@baklavajs/core";
 import { OptionPlugin } from "@baklavajs/plugin-options-vue";
 import BasicNode from "../nodes/BasicNode";
+import TextNode from "../nodes/TextNode";
 
 export default {
     data() {
@@ -21,16 +22,22 @@ export default {
             data: [
                 {"id":1,"connects_to":[2050],"file_name":"","file_number":10012,"file_description":"EGマウント特性（パラメーター）"},
                 {"id":2,"connects_to":[2040],"file_name":"2050_MA_10Nm_2nd_11111341.csv","file_number":2050,"file_description":"EGマウント特性（諸元）"},
-                {"id":3,"connects_to":[2040],"file_name":"10011_Sample_2.CSV","file_number":10011,"file_description":"EGマウント座票"},
                 {"id":4,"connects_to":[2031],"file_name":"","file_number":2040,"file_description":"EGマウント静特性"},
                 {"id":5,"connects_to":[2000,2001],"file_name":"","file_number":2031,"file_description":"EGマウント動特性"},
+                // below
+                {"id":3,"connects_to":[2040],"file_name":"10011_Sample_2.CSV","file_number":10011,"file_description":"EGマウント座票"},
+                // above
+
                 {"id":6,"connects_to":[2000,2001],"file_name":"","file_number":2020,"file_description":"EG脈動"},
                 {"id":7,"connects_to":[2000,2021],"file_name":"","file_number":2022,"file_description":"EG脈動（ボデー側）"},
                 {"id":8,"connects_to":[],"file_name":"","file_number":2001,"file_description":"EG変位"},
                 {"id":9,"connects_to":[201],"file_name":"","file_number":2000,"file_description":"EGマウント伝達力"},
-                {"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"EGマウントボデーOO度"},
                 {"id":11,"connects_to":[200],"file_name":"","file_number":201,"file_description":"EGマウント寄与"},
                 {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント合計寄与"},
+
+                {"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"EGマウントボデーOO度"},
+
+
             ],
         }
     },
@@ -75,7 +82,7 @@ export default {
             const n = new nodeType()
             n.name = nodeName
             n.options = options
-            n.customClasses += " " + n.name
+            n.customClasses = n.name
             this.editor.addNode(n)
             return n
         },
@@ -140,6 +147,7 @@ export default {
 
         this.editor.use(new OptionPlugin());
         this.editor.registerNodeType("BasicNode", BasicNode)
+        this.editor.registerNodeType("TextNode", TextNode)
 
         // TODO: Make this function real (pull from data points)
         // Currently, the below code errors (reading position doesnt work)
@@ -152,9 +160,6 @@ export default {
             // let node = this.makeNode("node-"+n, BasicNode)
             // node.options = this.data[n]
         }
-
-        // trying to make a node from the object passed in
-
 
         // drawing first 3 nodes
         for (var n = 1; n < 4; n++) {
@@ -203,23 +208,48 @@ export default {
         this.bindNodes(9,10)
 
         // coloring
+        this.colorNode("node-0", "cut")
         this.colorNode("node-4", "cut")
         this.colorNode("node-11", "cut")
 
         for (let i = 0; i < 12; i++) {
             let node = this.findNode("node-" + i)
-            node.name = this.data[i].file_description
+            node.name = this.data[i].file_number + "\n" + this.data[i].file_description
             node.state = this.data[i]
         }
 
         // console.log(this.findNodeByClassName("node-2").state.connects_to)
+        console.log(this.getNodes())
 
+        this.makeNode("Testing", TextNode).setOptionValue("TextDisplay", "2991")
     },
 
 }
 </script>
 
 <style>
+
+.node {
+    min-height: 200px;
+    min-width: 420px;
+    display:flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.node > .__title {
+    background: none !important;
+    order: 1;
+}
+
+.node > .__title > span {
+    font-size: 26px;
+}
+
+.node:hover {
+  opacity: 0.95;
+}
+
 .__port {
   opacity: 1;
 }
@@ -236,16 +266,6 @@ export default {
     clip-path: polygon(70% 0, 100% 30%, 100% 100%, 0 100%, 0 0);
 }
 
-/* .node-interface.--input {
-    float: left;
-    max-width: 60%;
-    
-    clear: both;
-} */
-
-/* .node div[node] {
-    clear: both;
-} */
 
 .__content {
     display: flex;
@@ -257,17 +277,7 @@ export default {
 .__inputs {
     order: -1;
 }
-.node > .__title {
-    background: none !important;
-}
 
-.node > .__title > span {
-    font-size: 26px;
-}
-
-.node:hover {
-  opacity: 0.95;
-}
 
 .background {
     min-height: 300px;
@@ -308,10 +318,7 @@ g .connection {
     color: white;
 }
 
-.node {
-    min-height: 200px;
-    min-width: 420px;
-}
+
 
 .connection {
     stroke-width: 1px !important;
