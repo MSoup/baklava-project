@@ -18,6 +18,7 @@ export default {
         return {
             editor: new Editor(),
             viewPlugin: new ViewPlugin(),
+            dependencyGraph: [],
             // hard coding names of data for now
             data: [
                 {"id":1,"connects_to":[2050],"file_name":"","file_number":10012,"file_description":"EGマウント特性（パラメーター）"},
@@ -27,21 +28,19 @@ export default {
                 // below
                 {"id":3,"connects_to":[2040],"file_name":"10011_Sample_2.CSV","file_number":10011,"file_description":"EGマウント座票"},
                 // above
-
                 {"id":6,"connects_to":[2000,2001],"file_name":"","file_number":2020,"file_description":"EG脈動"},
                 {"id":7,"connects_to":[2000,2021],"file_name":"","file_number":2022,"file_description":"EG脈動（ボデー側）"},
+
                 {"id":8,"connects_to":[],"file_name":"","file_number":2001,"file_description":"EG変位"},
                 {"id":9,"connects_to":[201],"file_name":"","file_number":2000,"file_description":"EGマウント伝達力"},
                 {"id":11,"connects_to":[200],"file_name":"","file_number":201,"file_description":"EGマウント寄与"},
                 {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント合計寄与"},
-
                 {"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"EGマウントボデーOO度"},
-
-
             ],
         }
     },
     methods: {
+
         // GET information
 
         // get list of nodes
@@ -55,11 +54,11 @@ export default {
             return [node.position.x, node.position.y]
         },
         // Find node by node name
-        findNode(nodeName) {
+        findNodeByTitle(nodeName) {
             return this.getNodes().find(node=>node.name==nodeName)
         },
         findNodeByClassName(className) {
-            return this.getNodes().find(node=>node.customClasses.contains(className))
+            return this.getNodes().find(node=>node.customClasses.split(" ").includes(className))
         },
 
 
@@ -89,7 +88,7 @@ export default {
 
         // n1, n2: numbers
         bindNodes(n1, n2) {
-            this.makeSimpleConnection(this.findNode("node-" + n1),this.findNode("node-" + n2))
+            this.makeSimpleConnection(this.findNodeByTitle("node-" + n1),this.findNodeByTitle("node-" + n2))
         },
 
         // Moves name to position relative to refNode
@@ -97,8 +96,8 @@ export default {
             if (typeof name == undefined || typeof refNodeName == undefined || typeof position == undefined) {
                 throw "Either name, refNodeName or position was undefined in moveNode"
             }
-            const curNode = this.findNode(name)
-            const refNode = this.findNode(refNodeName)
+            const curNode = this.findNodeByTitle(name)
+            const refNode = this.findNodeByTitle(refNodeName)
             const referencedPosition = this.getPosition(refNode)
 
             switch (position) {
@@ -121,18 +120,42 @@ export default {
             }
         },
         colorNode(name, color) {
-            const node = this.findNode(name)
+            const node = this.findNodeByTitle(name)
             node.customClasses += " " + color
-        }
-
+        },
+        findConnected(refNode) {
+            // refNode title being referenced
+            if (this.findNodeByTitle(refNode) !== undefined) {
+                const currentNode = this.findNodeByTitle(refNode)
+                const leftConnectionsList = this.getNodes().filter(node=>node.state.connects_to.includes(currentNode.state.file_number))
+                const rightConnectionsList = this.findNodeByClassName(refNode).state.connects_to
+                return {left: leftConnectionsList, right: rightConnectionsList}
+            }
+            // refNode classname being referenced
+            if (this.findNodeByClassName(refNode) !== undefined) {
+                const currentNode = this.findNodeByClassName(refNode)
+                // node-2
+                const leftConnectionsList = this.getNodes().filter(node=>node.state.connects_to.includes(currentNode.state.file_number))
+                const rightConnectionsList = this.findNodeByClassName(refNode).state.connects_to
+                return  {left: leftConnectionsList, right: rightConnectionsList}
+            }
+            // both undefined
+            throw "refNode returned undefined"
+            }
     },
     props: {
         EditorName: String,
         contents: undefined || Array,
     },
     created() {
-        // const contents = this.contents? this.contents: {"id":1,"connects_to":"","file_name":"","file_number":0,"file_description":"no info provided"}
-        // console.log(contents)
+        for (let i = 0; i < this.data.length; i++) {
+            const thisFile = this.data[i].file_number;
+            const connectsTo = this.data[i].connects_to;
+
+            this.dependencyGraph.push({"file": thisFile, "connectsTo": connectsTo})
+        }
+        
+        console.log(this.dependencyGraph)
         this.editor.use(this.viewPlugin);
         this.viewPlugin.scaling = .26
         this.viewPlugin.panning = {x: 10, y: 500}
@@ -163,8 +186,8 @@ export default {
 
         // drawing first 3 nodes
         for (var n = 1; n < 4; n++) {
-            let lastNode = this.findNode("node-"+(n-1))
-            let curNode = this.findNode("node-"+n)
+            let lastNode = this.findNodeByTitle("node-"+(n-1))
+            let curNode = this.findNodeByTitle("node-"+n)
             // make connections
             this.moveNode(curNode.name, lastNode.name, "right")
         }
@@ -213,15 +236,12 @@ export default {
         this.colorNode("node-11", "cut")
 
         for (let i = 0; i < 12; i++) {
-            let node = this.findNode("node-" + i)
+            let node = this.findNodeByTitle("node-" + i)
             node.name = this.data[i].file_number + "\n" + this.data[i].file_description
             node.state = this.data[i]
         }
 
-        // console.log(this.findNodeByClassName("node-2").state.connects_to)
-        console.log(this.getNodes())
-
-        this.makeNode("Testing", TextNode).setOptionValue("TextDisplay", "2991")
+        console.log(this.findConnected("node-2"))
     },
 
 }
@@ -251,7 +271,7 @@ export default {
 }
 
 .__port {
-  opacity: 1;
+  opacity: 0;
 }
 .blueDesign {
     background-color: #4682B4 !important;
@@ -295,7 +315,7 @@ export default {
 
 .--selected {
     filter: drop-shadow(0 0 0.75rem #ca1c1c);
-    background-color: #6B8E23 !important;
+    background-color: #CD5C5C !important;
 }
 
 g .connection {
@@ -308,17 +328,15 @@ g .connection {
 }
 
 .--output {
-  opacity: 1;   
+  opacity: 0;   
 }
 .--input {
-  opacity: 1;   
+  opacity: 0;   
 }
 
 .__options {
     color: white;
 }
-
-
 
 .connection {
     stroke-width: 1px !important;
