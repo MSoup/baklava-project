@@ -1,7 +1,7 @@
 <template>
     <v-container class="editor-container">
         <h2>{{EditorName}}</h2>
-        <baklava-editor :plugin="viewPlugin" :class="EditorName"></baklava-editor>
+        <baklava-editor ref="editor" :plugin="viewPlugin" :class="EditorName"></baklava-editor>
     </v-container>
 </template>
 
@@ -23,7 +23,7 @@ export default {
             data: [
                 {"id":1,"connects_to":[2050],"file_name":"","file_number":10012,"file_description":"EGマウント特性（パラメーター）"},
                 {"id":2,"connects_to":[2040],"file_name":"2050_MA_10Nm_2nd_11111341.csv","file_number":2050,"file_description":"EGマウント特性（諸元）"},
-                {"id":4,"connects_to":[2031],"file_name":"","file_number":2040,"file_description":"EGマウント静特性"},
+                {"id":4,"connects_to":[2020],"file_name":"","file_number":2040,"file_description":"EGマウント静特性"},
                 {"id":5,"connects_to":[2000,2001],"file_name":"","file_number":2031,"file_description":"EGマウント動特性"},
                 // below
                 {"id":3,"connects_to":[2040],"file_name":"10011_Sample_2.CSV","file_number":10011,"file_description":"EGマウント座票"},
@@ -58,7 +58,7 @@ export default {
             return this.getNodes().find(node=>node.name==nodeName)
         },
         findNodeByClassName(className) {
-            return this.getNodes().find(node=>node.customClasses.split(" ").includes(className))
+            return this.getNodes().find(node=>node.customClasses.split().includes(className))
         },
 
 
@@ -135,13 +135,39 @@ export default {
             if (this.findNodeByClassName(refNode) !== undefined) {
                 const currentNode = this.findNodeByClassName(refNode)
                 // node-2
-                const leftConnectionsList = this.getNodes().filter(node=>node.state.connects_to.includes(currentNode.state.file_number))
+                const leftConnectionsList = this.getNodes().filter(node=>node.state.connects_to.includes(currentNode.state.file_number)).map(node=>node.state.file_number)
                 const rightConnectionsList = this.findNodeByClassName(refNode).state.connects_to
                 return  {left: leftConnectionsList, right: rightConnectionsList}
             }
             // both undefined
             throw "refNode returned undefined"
+            },
+        // takes in {left: arr, right: arr}
+        colorConnected({left, right}) {
+            const leftSide = {left}
+            const rightSide = {right}
+            console.log("Within colorconnected", leftSide.left, rightSide.right)
+            // clear all colors first
+
+            // TODO
+            const nodeList = this.getNodes()
+            nodeList.forEach(node => node.customClasses.split().splice(1,0,"blue").join(" "))
+            nodeList.forEach(node => node.customClasses.split().splice(1,0,"green").join(" "))
+            // left nodes
+            for (let i = 0; i < leftSide.left.length; i++) {
+                console.log("leftside", i)
+                const result = nodeList.filter(node=>node.state.file_number === leftSide.left[i])[0]
+                result.customClasses += " blue"
             }
+            // right nodes
+            for (let i = 0; i < rightSide.right.length; i++) {
+                // do stuff
+                console.log("rightside", i)
+
+                const result = nodeList.filter(node=>node.state.file_number === rightSide.right[i])[0]
+                result.customClasses += " green"
+            }
+        },
     },
     props: {
         EditorName: String,
@@ -154,8 +180,6 @@ export default {
 
             this.dependencyGraph.push({"file": thisFile, "connectsTo": connectsTo})
         }
-        
-        console.log(this.dependencyGraph)
         this.editor.use(this.viewPlugin);
         this.viewPlugin.scaling = .26
         this.viewPlugin.panning = {x: 10, y: 500}
@@ -180,8 +204,6 @@ export default {
 
         for (let n = 0; n < 12; n++) {
             this.makeNode("node-"+n,BasicNode)
-            // let node = this.makeNode("node-"+n, BasicNode)
-            // node.options = this.data[n]
         }
 
         // drawing first 3 nodes
@@ -241,9 +263,27 @@ export default {
             node.state = this.data[i]
         }
 
-        console.log(this.findConnected("node-2"))
-    },
+        // finally adding event listeners to all nodes
 
+    },
+    mounted() {
+        this.$watch("$refs.editor.selectedNodes", () => {
+        if (!this.$refs.editor) {
+            return;
+        }
+        if (this.$refs.editor.selectedNodes.length === 0) {
+            return;
+        }
+        // get curNodeName
+        const currentNode = this.$refs.editor.selectedNodes[0].customClasses
+        // console.log(this.findNodeByClassName(currentNode))
+        console.log("selected", currentNode)
+        const connectedNodes = this.findConnected(currentNode)
+        console.log("connected to ", connectedNodes);
+        this.colorConnected(connectedNodes);
+    });
+    }
+    
 }
 </script>
 
