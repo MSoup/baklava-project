@@ -47,9 +47,16 @@ export default {
         getPosition(node) {
             return [node.position.x, node.position.y]
         },
+        // Find node by node name
         findNode(nodeName) {
             return this.getNodes().find(node=>node.name==nodeName)
         },
+        findNodeByClassName(className) {
+            return this.getNodes().find(node=>node.customClasses.contains(className))
+        },
+
+
+        
         // ADD information
         // node1: node
         // node2: node
@@ -68,41 +75,16 @@ export default {
             const n = new nodeType()
             n.name = nodeName
             n.options = options
+            n.customClasses += " " + n.name
             this.editor.addNode(n)
             return n
         },
 
-        // Inserts node below referenced node
-        // name: name of new node: String
-        // node: BasicNode
-        insertNodeBelow(name, node) {
-            const referencedPosition = this.getPosition(node)
-            const newPosition = [referencedPosition[0], referencedPosition[1] + 150]
-            const newNode = this.makeNode(name, BasicNode)
-            newNode.position.x = newPosition[0]
-            newNode.position.y = newPosition[1]
-            },
-        // Inserts node above referenced node
-        // node: BasicNode
-        insertNodeAbove(name, node) {
-            const referencedPosition = this.getPosition(node)
-            const newPosition = [referencedPosition[0], referencedPosition[1] - 150]
-            const newNode = this.makeNode(name, BasicNode)
-            newNode.position.x = newPosition[0]
-            newNode.position.y = newPosition[1]
-            },
         // n1, n2: numbers
         bindNodes(n1, n2) {
             this.makeSimpleConnection(this.findNode("node-" + n1),this.findNode("node-" + n2))
         },
-        // insertNodeRight(node) {
-        insertNodeRight(name, node) {
-            const referencedPosition = this.getPosition(node)
-            const newPosition = [referencedPosition[0] + 300, referencedPosition[1]]
-            const newNode = this.makeNode(name, BasicNode)
-            newNode.position.x = newPosition[0]
-            newNode.position.y = newPosition[1]
-            },
+
         // Moves name to position relative to refNode
         moveNode(name, refNodeName, position) {
             if (typeof name == undefined || typeof refNodeName == undefined || typeof position == undefined) {
@@ -114,11 +96,11 @@ export default {
 
             switch (position) {
                 case "left":
-                    curNode.position.x = referencedPosition[0] - 300
+                    curNode.position.x = referencedPosition[0] - 480
                     curNode.position.y = referencedPosition[1]
                     break
                 case "right":
-                    curNode.position.x = referencedPosition[0] + 300
+                    curNode.position.x = referencedPosition[0] + 480
                     curNode.position.y = referencedPosition[1]
                     break
                 case "above":
@@ -133,8 +115,9 @@ export default {
         },
         colorNode(name, color) {
             const node = this.findNode(name)
-            node.customClasses += color
+            node.customClasses += " " + color
         }
+
     },
     props: {
         EditorName: String,
@@ -144,10 +127,10 @@ export default {
         // const contents = this.contents? this.contents: {"id":1,"connects_to":"","file_name":"","file_number":0,"file_description":"no info provided"}
         // console.log(contents)
         this.editor.use(this.viewPlugin);
-        this.viewPlugin.scaling = 0.31
+        this.viewPlugin.scaling = .26
         this.viewPlugin.panning = {x: 10, y: 500}
-        this.viewPlugin.useStraightConnections = true
-        this.viewPlugin.backgroundGrid.gridSize = 200
+        this.viewPlugin.useStraightConnections = false
+        this.viewPlugin.backgroundGrid.gridSize = 0
         this.viewPlugin.hooks.renderNode.tap(this, (node) => {
             if (node.data.type === "BasicNode") {
                 node.$el.style.backgroundColor = "#647687";
@@ -220,15 +203,17 @@ export default {
         this.bindNodes(9,10)
 
         // coloring
-        this.colorNode("node-1", "blue")
-        this.colorNode("node-4", "blue cut")
-        this.colorNode("node-2", "red")
-        this.colorNode("node-3", "green")
+        this.colorNode("node-4", "cut")
         this.colorNode("node-11", "cut")
 
         for (let i = 0; i < 12; i++) {
-            this.findNode("node-" + i).name = this.data[i].file_description
+            let node = this.findNode("node-" + i)
+            node.name = this.data[i].file_description
+            node.state = this.data[i]
         }
+
+        // console.log(this.findNodeByClassName("node-2").state.connects_to)
+
     },
 
 }
@@ -236,25 +221,46 @@ export default {
 
 <style>
 .__port {
-  opacity: 0.0;
+  opacity: 1;
 }
-.blue {
-    background-color: #4682B4;
+.blueDesign {
+    background-color: #4682B4 !important;
 }
-.red {
-    background-color: #CD5C5C;
+.redDesign {
+    background-color: #CD5C5C !important;
 }
-.green {
-    background-color: #6B8E23;
+.greenDesign {
+    background-color: #6B8E23 !important;
 }
-
 .cut {
     clip-path: polygon(70% 0, 100% 30%, 100% 100%, 0 100%, 0 0);
 }
 
-.node > .__title {
-    background-color: #647687;
+/* .node-interface.--input {
+    float: left;
+    max-width: 60%;
+    
+    clear: both;
+} */
+
+/* .node div[node] {
+    clear: both;
+} */
+
+.__content {
+    display: flex;
+    justify-content: space-between;
 }
+.__outputs {
+    order: 1;
+}
+.__inputs {
+    order: -1;
+}
+.node > .__title {
+    background: none !important;
+}
+
 .node > .__title > span {
     font-size: 26px;
 }
@@ -279,6 +285,7 @@ export default {
 
 .--selected {
     filter: drop-shadow(0 0 0.75rem #ca1c1c);
+    background-color: #6B8E23 !important;
 }
 
 g .connection {
@@ -291,10 +298,10 @@ g .connection {
 }
 
 .--output {
-  opacity: 0;   
+  opacity: 1;   
 }
 .--input {
-  opacity: 0;   
+  opacity: 1;   
 }
 
 .__options {
@@ -303,7 +310,10 @@ g .connection {
 
 .node {
     min-height: 200px;
-    min-width: 250px;
+    min-width: 420px;
 }
 
+.connection {
+    stroke-width: 1px !important;
+}
 </style>

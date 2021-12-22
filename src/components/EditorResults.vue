@@ -98,20 +98,20 @@ export default {
 
             switch (position) {
                 case "left":
-                    curNode.position.x = referencedPosition[0] - 300
+                    curNode.position.x = referencedPosition[0] - 400
                     curNode.position.y = referencedPosition[1]
                     break
                 case "right":
-                    curNode.position.x = referencedPosition[0] + 300
+                    curNode.position.x = referencedPosition[0] + 400
                     curNode.position.y = referencedPosition[1]
                     break
                 case "above":
                     curNode.position.x = referencedPosition[0]
-                    curNode.position.y = referencedPosition[1] - 150
+                    curNode.position.y = referencedPosition[1] - 220
                     break
                 case "below":
                     curNode.position.x = referencedPosition[0]
-                    curNode.position.y = referencedPosition[1] + 150
+                    curNode.position.y = referencedPosition[1] + 220
                     break
             }
         },
@@ -128,10 +128,10 @@ export default {
         // const contents = this.contents? this.contents: {"id":1,"connects_to":"","file_name":"","file_number":0,"file_description":"no info provided"}
         // console.log(contents)
         this.editor.use(this.viewPlugin);
-        this.viewPlugin.scaling = 0.5
+        this.viewPlugin.scaling = 0.25
         this.viewPlugin.panning = {x: 10, y: 100}
         this.viewPlugin.useStraightConnections = true
-        this.viewPlugin.backgroundGrid.gridSize = 200
+        this.viewPlugin.backgroundGrid.gridSize = 0
         this.viewPlugin.hooks.renderNode.tap(this, (node) => {
             if (node.data.type === "BasicNode") {
                 node.$el.style.backgroundColor = "#647687";
@@ -173,72 +173,5 @@ export default {
 </script>
 
 <style>
-.__port {
-  opacity: 0.0;
-}
-.blue {
-    background-color: #4682B4;
-}
-.red {
-    background-color: #CD5C5C;
-}
-.green {
-    background-color: #6B8E23;
-}
-
-.cut {
-    clip-path: polygon(75% 0, 100% 40%, 100% 100%, 0 100%, 0 0);
-}
-
-.node > .__title {
-    background-color: #647687;
-}
-
-.node:hover {
-  opacity: 0.95;
-}
-
-.background {
-    min-height: 300px;
-    max-height: 400px;
-    background-color: #E0E4E7 !important;
-}
-
-.node-editor {
-    min-height: 300px;
-    margin-bottom: 15px;
-    max-height: 400px;
-    border-radius: 10px;
-    filter: drop-shadow(0 0 0.75rem #E0E4E7);
-}
-
-.--selected {
-    filter: drop-shadow(0 0 0.75rem #ca1c1c);
-}
-
-g .connection {
-    stroke: red;
-}
-
-
-.inputOnly {
-    min-height: 100px;
-}
-
-.node > .__title > span  {
-  font-size: 26px;
-}
-
-.--output {
-  opacity: 0;   
-}
-.--input {
-  opacity: 0;   
-}
-
-.__options {
-    color: white;
-}
-
 
 </style>

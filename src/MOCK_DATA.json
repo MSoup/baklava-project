@@ -10,5 +10,5 @@
         {"id":9,"connects_to":[201],"file_name":"","file_number":2000,"file_description":"EGマウント伝達力"},
         {"id":10,"connects_to":[201],"file_name":"","file_number":2010,"file_description":"EGマウントボデーOO度"},
         {"id":11,"connects_to":[200],"file_name":"","file_number":201,"file_description":"EGマウント寄与"},
-        {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント寄与"}
+        {"id":12,"connects_to":[],"file_name":"","file_number":200,"file_description":"EGマウント合計寄与"}
 ]

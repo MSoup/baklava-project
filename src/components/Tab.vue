@@ -72,15 +72,15 @@ import graph_1_data from "../MOCK_DATA.json";
     methods: {
       handleClick(index) {
         // Clicking tabs will change what data should be displayed
-        // console.log(this.focused)
-        // console.log(this.tab)
+
         console.log(index)
       }
     },
     created() {
     },
     components: {
-      Editor, Editor2
+      Editor, 
+      Editor2
     },
     props: {
         items: Array,
