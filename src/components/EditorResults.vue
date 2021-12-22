@@ -98,11 +98,11 @@ export default {
 
             switch (position) {
                 case "left":
-                    curNode.position.x = referencedPosition[0] - 400
+                    curNode.position.x = referencedPosition[0] - 480
                     curNode.position.y = referencedPosition[1]
                     break
                 case "right":
-                    curNode.position.x = referencedPosition[0] + 400
+                    curNode.position.x = referencedPosition[0] + 480
                     curNode.position.y = referencedPosition[1]
                     break
                 case "above":

@@ -143,31 +143,31 @@ export default {
             throw "refNode returned undefined"
             },
         // takes in {left: arr, right: arr}
-        colorConnected({left, right}) {
-            const leftSide = {left}
-            const rightSide = {right}
-            console.log("Within colorconnected", leftSide.left, rightSide.right)
-            // clear all colors first
+        // colorConnected({left, right}) {
+        //     const leftSide = {left}
+        //     const rightSide = {right}
+        //     console.log("Within colorconnected", leftSide.left, rightSide.right)
+        //     // clear all colors first
 
-            // TODO
-            const nodeList = this.getNodes()
-            nodeList.forEach(node => node.customClasses.split().splice(1,0,"blue").join(" "))
-            nodeList.forEach(node => node.customClasses.split().splice(1,0,"green").join(" "))
-            // left nodes
-            for (let i = 0; i < leftSide.left.length; i++) {
-                console.log("leftside", i)
-                const result = nodeList.filter(node=>node.state.file_number === leftSide.left[i])[0]
-                result.customClasses += " blue"
-            }
-            // right nodes
-            for (let i = 0; i < rightSide.right.length; i++) {
-                // do stuff
-                console.log("rightside", i)
+        //     // TODO
+        //     const nodeList = this.getNodes()
+        //     nodeList.forEach(node => node.customClasses.split().splice(1,0,"blue").join(" "))
+        //     nodeList.forEach(node => node.customClasses.split().splice(1,0,"green").join(" "))
+        //     // left nodes
+        //     for (let i = 0; i < leftSide.left.length; i++) {
+        //         console.log("leftside", i)
+        //         const result = nodeList.filter(node=>node.state.file_number === leftSide.left[i])[0]
+        //         result.customClasses += " blue"
+        //     }
+        //     // right nodes
+        //     for (let i = 0; i < rightSide.right.length; i++) {
+        //         // do stuff
+        //         console.log("rightside", i)
 
-                const result = nodeList.filter(node=>node.state.file_number === rightSide.right[i])[0]
-                result.customClasses += " green"
-            }
-        },
+        //         const result = nodeList.filter(node=>node.state.file_number === rightSide.right[i])[0]
+        //         result.customClasses += " green"
+        //     }
+        // },
     },
     props: {
         EditorName: String,
@@ -280,7 +280,7 @@ export default {
         console.log("selected", currentNode)
         const connectedNodes = this.findConnected(currentNode)
         console.log("connected to ", connectedNodes);
-        this.colorConnected(connectedNodes);
+        // this.colorConnected(connectedNodes);
     });
     }
     
